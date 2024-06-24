@@ -15,3 +15,21 @@ def home():
 @app.route('/about')
 def about():
     return 'About'
+
+@app.route("/api/foods",methods=['POST'])
+def food():
+    food_ids    = request.json['food_ids']
+    umur    = request.json['umur']
+    jenis_kelamin    = request.json['jenis_kelamin']
+    tinggi_badan    = request.json['tinggi_badan']
+
+    predict = predict_status_gizi(umur, jenis_kelamin, tinggi_badan)
+    result  = recommend_foods(food_ids)
+    return jsonify({
+        'food' : result,
+        'stunting': {
+            'stunting': predict,
+            'umur': umur,
+            'jenis_kelamin': jenis_kelamin,
+            'tinggi_badan': tinggi_badan
+        }})
